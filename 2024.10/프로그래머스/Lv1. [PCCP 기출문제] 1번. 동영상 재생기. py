@@ -1,0 +1,56 @@
+def solution(video_len, pos, op_start, op_end, commands):
+    answer = ''
+    
+    mm = pos[:2]
+    ss = pos[3:5]
+    time = int(mm) * 60 + int(ss)
+    #print("지금", time)
+    
+    op_start_mm = op_start[:2]
+    op_start_ss = op_start[3:5]
+    op_start_time = int(op_start_mm) * 60 + int(op_start_ss)
+    #print("오프닝 시작", op_start_time)
+    
+    op_end_mm = op_end[:2]
+    op_end_ss = op_end[3:5]
+    op_end_time = int(op_end_mm) * 60 + int(op_end_ss)
+    #print("오프닝 종료",op_end_time)
+    
+    video_len_mm = video_len[:2]
+    video_len_ss = video_len[3:5]
+    video_len_time = int(video_len_mm) * 60 + int(video_len_ss)
+    #print("비디오 전체길이", video_len_time)
+    
+    for command in commands:
+        
+        if command == "prev":
+            if time < 10:
+                time = 0
+            else: time -= 10
+        
+        else:
+            if time >= op_start_time and time <= op_end_time: # 재생 위치가 오프닝인 경우 오프닝 끝나는 위치로 이동  
+                time = op_end_time + 10  
+                if time >= video_len_time:
+                    time = video_len_time
+                
+            elif time + 10 >= video_len_time: # 10초 미만 -> 영상 마지막 위치로 이동
+                time = video_len_time
+            
+            else:
+                time += 10
+        
+        if time >= op_start_time and time <= op_end_time: # 재생 위치가 오프닝인 경우 오프닝 끝나는 위치로 이동
+            time = op_end_time
+       
+    ans_mm = time // 60
+    ans_ss = time % 60
+    print(ans_mm, ans_ss)
+    
+    if ans_mm < 10:
+        ans_mm = "0" + str(ans_mm)
+    if ans_ss < 10:
+        ans_ss = "0" + str(ans_ss)
+
+    ans = (f'{ans_mm}:{ans_ss}')
+    return ans
